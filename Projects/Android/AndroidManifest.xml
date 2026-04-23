@@ -17,7 +17,6 @@
 	<uses-feature android:name="android.software.xr.api.openxr" android:required="true" />
 	<uses-feature android:name="android.software.xr.api.spatial" android:required="true" />
 	<uses-feature android:name="android.software.xr.input.controller" android:required="false" />
-	<uses-library android:name="libopenxr.google.so" android:required="false" />
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -38,6 +37,8 @@
 		<meta-data android:name="com.oculus.trade_cpu_for_gpu_amount" android:value="-1" />
 		<meta-data android:name="com.oculus.vr.focusaware" android:value="true" />
 		<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only" />
+
+		<uses-library android:name="libopenxr.google.so" android:required="false" />
 
 		<!-- PICO XR -->
 		<meta-data android:name="pvr.app.type" android:value="vr" />
