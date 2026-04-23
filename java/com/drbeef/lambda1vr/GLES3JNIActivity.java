@@ -49,9 +49,9 @@ import static android.system.Os.setenv;
 			manufacturer = "meta";
 		}
 
-		setenv("OPENXR_HMD", manufacturer, true);
 		try
 		{
+			setenv("OPENXR_HMD", manufacturer, true);
 			//Load manufacturer specific loader
 			System.loadLibrary("openxr_loader_" + manufacturer);
 		} catch (UnsatisfiedLinkError | Exception e)
