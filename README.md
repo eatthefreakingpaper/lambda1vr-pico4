@@ -178,4 +178,5 @@ This port was developed using the now deprecated Xash3D port found here: https:/
 Lambda1VR is covered by the GPL 3.0 license which is inherited from the Xash3D-FWGS project.
 The HLSDK sub-repository and associated works (which include the original 6DoF weapons code by Max Vollmer) are in a separate repository wholly covered with the Valve Corporation Half Life 1 SDK LICENSE (https://github.com/DrBeef/hlsdk-xash3d).
 #   l a m b d a 1 v r - p i c o 4  
+ #   l a m b d a 1 v r - p i c o 4  
  
