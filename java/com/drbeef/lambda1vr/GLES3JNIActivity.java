@@ -49,11 +49,11 @@ import static android.system.Os.setenv;
 			manufacturer = "meta";
 		}
 
+		setenv("OPENXR_HMD", manufacturer, true);
 		try
 		{
 			//Load manufacturer specific loader
 			System.loadLibrary("openxr_loader_" + manufacturer);
-			setenv("OPENXR_HMD", manufacturer, true);
 		} catch (UnsatisfiedLinkError | Exception e)
 		{}
 

@@ -1554,6 +1554,9 @@ void TBXR_InitialiseOpenXR()
 
     //First, find out which HMD we are using
     gAppState.OpenXRHMD = (char*)getenv("OPENXR_HMD");
+    if (gAppState.OpenXRHMD == NULL) {
+        gAppState.OpenXRHMD = "generic";
+    }
 
 	PFN_xrInitializeLoaderKHR xrInitializeLoaderKHR;
 	xrGetInstanceProcAddr(
