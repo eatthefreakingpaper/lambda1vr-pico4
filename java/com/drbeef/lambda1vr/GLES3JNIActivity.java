@@ -90,21 +90,17 @@ import static android.system.Os.setenv;
 
 	/** Initializes the Activity only if the permission has been granted. */
 	private void checkPermissionsAndInitialize() {
-		if (!Environment.isExternalStorageManager()) {
-			//request for the permission
-			Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-			Uri uri = Uri.fromParts("package", getPackageName(), null);
-			intent.setData(uri);
-			startActivityForResult(intent, REQUEST_MANAGE_ALL_FILES);
-
-			finishAffinity(); // Cleanly exit
-
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			if (!Environment.isExternalStorageManager()) {
+				Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+				Uri uri = Uri.fromParts("package", getPackageName(), null);
+				intent.setData(uri);
+				startActivityForResult(intent, REQUEST_MANAGE_ALL_FILES);
+				finishAffinity();
+				return;
+			}
 		}
-		else
-		{
-			// Permissions have already been granted.
-			create();
-		}
+		create();
 	}
 
 	@Override
