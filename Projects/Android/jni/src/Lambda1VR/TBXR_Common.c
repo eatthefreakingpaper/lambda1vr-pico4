@@ -1595,6 +1595,10 @@ void TBXR_InitialiseOpenXR()
 	instanceCreateInfo.enabledApiLayerCount = 0;
 	instanceCreateInfo.enabledApiLayerNames = NULL;
 
+    // dynamicExts must outlive the if/else block since xrCreateInstance is called after it
+    const char* dynamicExts[4];
+    uint32_t numDynamicExts = 0;
+
     if (strstr(gAppState.OpenXRHMD, "meta") != NULL)
     {
         instanceCreateInfo.enabledExtensionCount = numRequiredExtensions_meta;
@@ -1620,8 +1624,6 @@ void TBXR_InitialiseOpenXR()
         }
         free(availExts);
 
-        const char* dynamicExts[4];
-        uint32_t numDynamicExts = 0;
         for (uint32_t i = 0; i < numRequiredExtensions_pico; i++) {
             dynamicExts[numDynamicExts++] = requiredExtensionNames_pico[i];
         }
