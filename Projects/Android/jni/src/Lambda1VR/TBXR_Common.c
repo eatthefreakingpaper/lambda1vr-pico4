@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <time.h>
@@ -116,8 +117,7 @@ PFN_xrSetConfigPICO    pfnXrSetConfigPICO;
 const char* const requiredExtensionNames_pico[] = {
 		XR_KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME,
 		XR_EXT_PERFORMANCE_SETTINGS_EXTENSION_NAME,
-		XR_KHR_OPENGL_ES_ENABLE_EXTENSION_NAME,
-		XR_PICO_CONFIGS_EXT_EXTENSION_NAME};
+		XR_KHR_OPENGL_ES_ENABLE_EXTENSION_NAME};
 
 
 const uint32_t numRequiredExtensions_meta =
@@ -1522,10 +1522,13 @@ void TBXR_InitRenderer(  ) {
         xrGetInstanceProcAddr(gAppState.Instance,"xrSetConfigPICO", (PFN_xrVoidFunction*)(&pfnXrSetConfigPICO));
         xrGetInstanceProcAddr(gAppState.Instance,"xrGetConfigPICO", (PFN_xrVoidFunction*)(&pfnXrGetConfigPICO));
 
-        pfnXrSetConfigPICO(gAppState.Session,TRACKING_ORIGIN,"0");
-        pfnXrSetConfigPICO(gAppState.Session,TRACKING_ORIGIN,"1");
-
-        pfnXrGetConfigPICO(gAppState.Session, GET_DISPLAY_RATE, &gAppState.currentDisplayRefreshRate);
+        if (pfnXrSetConfigPICO != NULL) {
+            pfnXrSetConfigPICO(gAppState.Session,TRACKING_ORIGIN,"0");
+            pfnXrSetConfigPICO(gAppState.Session,TRACKING_ORIGIN,"1");
+        }
+        if (pfnXrGetConfigPICO != NULL) {
+            pfnXrGetConfigPICO(gAppState.Session, GET_DISPLAY_RATE, &gAppState.currentDisplayRefreshRate);
+        }
     }
 
 	ovrRenderer_Create(
@@ -1596,8 +1599,35 @@ void TBXR_InitialiseOpenXR()
     }
     else
     {
-        instanceCreateInfo.enabledExtensionCount = numRequiredExtensions_pico;
-        instanceCreateInfo.enabledExtensionNames = requiredExtensionNames_pico;
+        // Probe for optional XR_PICO_configs_ext — not all runtimes expose it through the loader
+        uint32_t numAvailExts = 0;
+        xrEnumerateInstanceExtensionProperties(NULL, 0, &numAvailExts, NULL);
+        XrExtensionProperties* availExts = (XrExtensionProperties*)malloc(numAvailExts * sizeof(XrExtensionProperties));
+        for (uint32_t i = 0; i < numAvailExts; i++) {
+            availExts[i].type = XR_TYPE_EXTENSION_PROPERTIES;
+            availExts[i].next = NULL;
+        }
+        xrEnumerateInstanceExtensionProperties(NULL, numAvailExts, &numAvailExts, availExts);
+        bool picoConfigsExtAvailable = false;
+        for (uint32_t i = 0; i < numAvailExts; i++) {
+            if (strcmp(availExts[i].extensionName, XR_PICO_CONFIGS_EXT_EXTENSION_NAME) == 0) {
+                picoConfigsExtAvailable = true;
+                break;
+            }
+        }
+        free(availExts);
+
+        const char* dynamicExts[4];
+        uint32_t numDynamicExts = 0;
+        for (uint32_t i = 0; i < numRequiredExtensions_pico; i++) {
+            dynamicExts[numDynamicExts++] = requiredExtensionNames_pico[i];
+        }
+        if (picoConfigsExtAvailable) {
+            dynamicExts[numDynamicExts++] = XR_PICO_CONFIGS_EXT_EXTENSION_NAME;
+        }
+
+        instanceCreateInfo.enabledExtensionCount = numDynamicExts;
+        instanceCreateInfo.enabledExtensionNames = dynamicExts;
     }
 
 	XrResult initResult;
