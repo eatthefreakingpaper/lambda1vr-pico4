@@ -54,7 +54,7 @@ import static android.system.Os.setenv;
 			//Load manufacturer specific loader
 			System.loadLibrary("openxr_loader_" + manufacturer);
 			setenv("OPENXR_HMD", manufacturer, true);
-		} catch (Exception e)
+		} catch (UnsatisfiedLinkError | Exception e)
 		{}
 
 		System.loadLibrary( "xash" );
