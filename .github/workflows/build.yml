@@ -50,7 +50,8 @@ jobs:
       - name: Build release APK
         working-directory: Projects/Android
         run: |
-          gradle assembleRelease \
+          gradle clean assembleRelease \
+            --no-build-cache \
             -Pandroid.ndkVersion=25.1.8937393 \
             -Pandroid.compileSdkVersion=32
 
