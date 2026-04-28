@@ -482,6 +482,9 @@ void * AppThreadFunction( void * parm )
 
 	TBXR_InitialiseOpenXR();
 
+	// Engine uses getcwd() to find game data — must be set before Host_Main
+	chdir("/sdcard/xash");
+
 	Host_Main(argc, (const char**)argv, "valve", false, NULL);
 
 	VR_Init();
@@ -490,9 +493,6 @@ void * AppThreadFunction( void * parm )
 	TBXR_InitRenderer();
 	TBXR_InitActions();
 	TBXR_WaitForSessionActive();
-
-	//Always use this folder
-	chdir("/sdcard/xash");
 
 	bool destroyed = false;
 	while (!destroyed)
