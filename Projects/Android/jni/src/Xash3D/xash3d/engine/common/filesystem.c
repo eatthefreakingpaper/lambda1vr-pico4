@@ -1728,7 +1728,25 @@ static qboolean FS_ParseGameInfo( const char *gamedir, gameinfo_t *GameInfo )
 		afile = (char *)FS_LoadDirectFile( filepath, NULL );
 
 	if( !afile )
+	{
+		// gameinfo.txt couldn't be created or read (e.g. read-only storage on Android)
+		// try liblist.gam directly as a fallback
+		afile = (char *)FS_LoadDirectFile( liblist, NULL );
+		if( afile )
+		{
+			FS_InitGameInfo( GameInfo, gamedir );
+			FS_ParseGenericGameInfo( GameInfo, afile, false );
+			Mem_Free( afile );
+			return true;
+		}
+		// no game info file at all — if this is the target gamedir, proceed with defaults
+		if( !Q_stricmp( gs_basedir, gamedir ))
+		{
+			FS_InitGameInfo( GameInfo, gamedir );
+			return true;
+		}
 		return false;
+	}
 
 	FS_InitGameInfo( GameInfo, gamedir );
 
