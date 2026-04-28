@@ -60,6 +60,7 @@ extern int runStatus;
 void L1VR_exit(int exitCode)
 {
 	runStatus = exitCode;
+	pthread_exit(NULL);
 }
 
 void rotateAboutOrigin(float x, float y, float rotation, vec2_t out)
