@@ -46,10 +46,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.2.1'
+          cache-disabled: true
 
       - name: Build release APK
         working-directory: Projects/Android
         run: |
+          rm -rf .cxx
           gradle clean assembleRelease \
             --no-build-cache \
             -Pandroid.ndkVersion=25.1.8937393 \
