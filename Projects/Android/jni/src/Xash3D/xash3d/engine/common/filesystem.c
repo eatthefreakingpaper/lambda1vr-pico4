@@ -35,6 +35,14 @@ GNU General Public License for more details.
 #include <dirent.h>
 #include <errno.h>
 #include <unistd.h>
+#ifdef __ANDROID__
+#include <android/log.h>
+#define FS_LOGI(...)  __android_log_print(ANDROID_LOG_INFO,  "Lambda1VR_FS", __VA_ARGS__)
+#define FS_LOGE(...)  __android_log_print(ANDROID_LOG_ERROR, "Lambda1VR_FS", __VA_ARGS__)
+#else
+#define FS_LOGI(...)
+#define FS_LOGE(...)
+#endif
 #endif
 
 #define FILE_BUFF_SIZE		2048
@@ -1742,9 +1750,11 @@ static qboolean FS_ParseGameInfo( const char *gamedir, gameinfo_t *GameInfo )
 		// no game info file at all — if this is the target gamedir, proceed with defaults
 		if( !Q_stricmp( gs_basedir, gamedir ))
 		{
+			FS_LOGI("FS_ParseGameInfo(%s): no gameinfo.txt or liblist.gam, using defaults (gs_basedir=%s)", gamedir, gs_basedir);
 			FS_InitGameInfo( GameInfo, gamedir );
 			return true;
 		}
+		FS_LOGI("FS_ParseGameInfo(%s): returning false (gs_basedir=%s)", gamedir, gs_basedir);
 		return false;
 	}
 
@@ -1786,7 +1796,11 @@ void FS_LoadGameInfo( const char *rootfolder )
 	}
 
 	if( i == SI.numgames )
+	{
+		FS_LOGE("FS_LoadGameInfo: '%s' not found in %d game(s)", gs_basedir, SI.numgames);
 		Sys_Error( "Couldn't find game directory '%s'\n", gs_basedir );
+		return; // Sys_Error may return in VR port; bail out to avoid use-after-free
+	}
 
 	SI.GameInfo = SI.games[i];
 	if( !Sys_GetParmFromCmdLine( "-dll", SI.gamedll ) )
@@ -1901,6 +1915,14 @@ void FS_Init( void )
 		stringlistsort( &dirs );
 
 		MsgDev( D_NOTE, "%d gamedirs found\n", dirs.numstrings );
+		{
+			char cwd[1024];
+			getcwd(cwd, sizeof(cwd)-1);
+			cwd[sizeof(cwd)-1] = 0;
+			FS_LOGI("FS_Init: cwd=%s gs_basedir=%s numstrings=%d", cwd, gs_basedir, dirs.numstrings);
+			for( int di = 0; di < dirs.numstrings && di < 32; di++ )
+				FS_LOGI("FS_Init:   dir[%d]=%s", di, dirs.strings[di]);
+		}
 
 #ifndef _WIN32
 		if( dirs.maxstrings == 0 )
@@ -1924,6 +1946,7 @@ void FS_Init( void )
 
 		if( i == dirs.numstrings )
 		{
+			FS_LOGE("FS_Init: game directory '%s' not found in dir listing", gs_basedir);
 			MsgDev( D_INFO, "FS_Init: game directory \"%s\" not exist\n", gs_basedir );
 			if( hasDefaultDir ) Q_strncpy( gs_basedir, SI.ModuleName, sizeof( gs_basedir )); // default dir
 		}

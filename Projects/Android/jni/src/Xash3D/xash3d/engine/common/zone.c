@@ -74,7 +74,7 @@ void *_Mem_Alloc( byte *poolptr, size_t size, const char *filename, int fileline
 	mempool_t		*pool = (mempool_t *)((byte *)poolptr);
 
 	if( size <= 0 ) return NULL;
-	if( poolptr == NULL ) Sys_Error( "Mem_Alloc: pool == NULL (alloc at %s:%i)\n", filename, fileline );
+	if( poolptr == NULL ) { Sys_Error( "Mem_Alloc: pool == NULL (alloc at %s:%i)\n", filename, fileline ); return NULL; }
 	pool->totalsize += size;
 
 	if( size < 4096 )

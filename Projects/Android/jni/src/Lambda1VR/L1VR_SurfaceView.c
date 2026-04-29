@@ -60,6 +60,21 @@ extern int runStatus;
 void L1VR_exit(int exitCode)
 {
 	runStatus = exitCode;
+	// Unblock any MQ_WAIT_PROCESSED waiter (e.g. GLES3JNILib_onCreate) before
+	// killing this thread.  Without this, signaling ProcessedCondition only
+	// happens inside TBXR_ProcessMessageQueue which we'll never reach if the
+	// engine fails during Host_Main.
+	if (gAppThread)
+	{
+		pthread_mutex_lock(&gAppThread->MessageQueue.Mutex);
+		gAppThread->MessageQueue.ProcessedFlag = true;
+		gAppThread->MessageQueue.Wait = MQ_WAIT_NONE;
+		pthread_cond_broadcast(&gAppThread->MessageQueue.ProcessedCondition);
+		// Disable the queue so subsequent PostMessage calls are no-ops
+		gAppThread->MessageQueue.EnabledFlag = false;
+		pthread_mutex_unlock(&gAppThread->MessageQueue.Mutex);
+	}
+	pthread_exit(NULL);
 }
 
 void rotateAboutOrigin(float x, float y, float rotation, vec2_t out)
