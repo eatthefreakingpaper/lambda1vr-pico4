@@ -468,9 +468,12 @@ void VR_HandleControllerInput() {
 	}
 }
 
+static const char L1VR_BUILD_TAG[] = "L1VR_BUILD_2026_04_29";
+
 void * AppThreadFunction( void * parm )
 {
 	gAppThread = (ovrAppThread *) parm;
+	(void)L1VR_BUILD_TAG;
 
 	java.Vm = gAppThread->JavaVm;
 	(*java.Vm)->AttachCurrentThread( java.Vm, &java.Env, NULL );
