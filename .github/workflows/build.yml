@@ -57,9 +57,26 @@ jobs:
             -Pandroid.ndkVersion=25.1.8937393 \
             -Pandroid.compileSdkVersion=32
 
+      - name: Verify libxash.so was compiled fresh
+        run: |
+          echo "=== All libxash.so files ==="
+          find Projects/Android -name "libxash.so" | while read f; do
+            echo "--- $f ---"
+            sha256sum "$f"
+            readelf -n "$f" 2>/dev/null | grep -i "build id" || true
+            strings "$f" | grep "L1VR_BUILD" && echo "SENTINEL: FOUND" || echo "SENTINEL: NOT FOUND"
+          done
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: lambda1vr-pico4
           path: Projects/Android/build/outputs/apk/release/lambda1vr-release.apk
+          retention-days: 14
+
+      - name: Upload libxash.so artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libxash-so
+          path: Projects/Android/**/libxash.so
           retention-days: 14
