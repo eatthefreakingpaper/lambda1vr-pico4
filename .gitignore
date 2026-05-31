@@ -21,8 +21,9 @@ $RECYCLE.BIN/
 #libs
 *.a
 
-#model files
+#model files (ignore everywhere except assets/models which is intentionally tracked)
 *.mdl
+!assets/models/*.mdl
 
 *.wav
 
@@ -38,7 +39,6 @@ Projects/Android/.externalNativeBuild/*
 Projects/Android/.gradle/*
 Projects/Android/.idea/codeStyles/Project.xml
 Projects/.idea/*
-assets/models
 .gradle/*
 *.json
 *.bin

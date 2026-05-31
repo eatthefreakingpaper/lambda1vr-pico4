@@ -1,4 +1,4 @@
-![Lambda1VR Banner](https://www.lambda1vr.com/img/banner2.jpg)
+﻿![Lambda1VR Banner](https://www.lambda1vr.com/img/banner2.jpg)
 
 # Lambda1VR
 
