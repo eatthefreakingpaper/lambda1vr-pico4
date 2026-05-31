@@ -508,9 +508,8 @@ import static android.system.Os.setenv;
 	public void copy_asset(String path, String name, boolean forceOverwrite) {
 		File f = new File(path + "/" + name);
 		if (!f.exists() || forceOverwrite) {
-			
-			//Ensure we have an appropriate folder
-			new File(path).mkdirs();
+			// Create the full parent directory tree, including any subdirs in `name`
+			f.getParentFile().mkdirs();
 			_copy_asset(name, path + "/" + name);
 		}
 	}

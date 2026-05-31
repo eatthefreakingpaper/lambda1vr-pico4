@@ -1798,6 +1798,16 @@ void FS_LoadGameInfo( const char *rootfolder )
 	if( i == SI.numgames )
 	{
 		FS_LOGE("FS_LoadGameInfo: '%s' not found in %d game(s)", gs_basedir, SI.numgames);
+#ifdef __ANDROID__
+		{
+			FILE *diag = fopen("/sdcard/xash/l1vr_fs_diag.txt", "a");
+			if( diag )
+			{
+				fprintf(diag, "FAIL: FS_LoadGameInfo: '%s' not found in %d games\n", gs_basedir, SI.numgames);
+				fclose(diag);
+			}
+		}
+#endif
 		Sys_Error( "Couldn't find game directory '%s'\n", gs_basedir );
 		return; // Sys_Error may return in VR port; bail out to avoid use-after-free
 	}
@@ -1922,6 +1932,18 @@ void FS_Init( void )
 			FS_LOGI("FS_Init: cwd=%s gs_basedir=%s numstrings=%d", cwd, gs_basedir, dirs.numstrings);
 			for( int di = 0; di < dirs.numstrings && di < 32; di++ )
 				FS_LOGI("FS_Init:   dir[%d]=%s", di, dirs.strings[di]);
+#ifdef __ANDROID__
+			{
+				FILE *diag = fopen("/sdcard/xash/l1vr_fs_diag.txt", "w");
+				if( diag )
+				{
+					fprintf(diag, "cwd=%s\ngs_basedir=%s\nnumdirs=%d\n", cwd, gs_basedir, dirs.numstrings);
+					for( int di = 0; di < dirs.numstrings; di++ )
+						fprintf(diag, "dir[%d]=%s\n", di, dirs.strings[di]);
+					fclose(diag);
+				}
+			}
+#endif
 		}
 
 #ifndef _WIN32

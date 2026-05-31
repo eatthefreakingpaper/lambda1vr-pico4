@@ -503,7 +503,9 @@ void * AppThreadFunction( void * parm )
 	// Engine uses getcwd() to find game data — must be set before Host_Main
 	chdir("/sdcard/xash");
 
+	__android_log_print(ANDROID_LOG_INFO, "Lambda1VR", "Calling Host_Main, cwd=/sdcard/xash");
 	Host_Main(argc, (const char**)argv, "valve", false, NULL);
+	__android_log_print(ANDROID_LOG_INFO, "Lambda1VR", "Host_Main returned");
 
 	VR_Init();
 
