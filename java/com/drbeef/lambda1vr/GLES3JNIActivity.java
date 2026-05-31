@@ -113,7 +113,7 @@ import static android.system.Os.setenv;
 	public void create()
 	{
 		copy_asset(getFilesDir().getPath(), "extras.pak", false);
-		copy_asset("/sdcard/xash/", "commandline.txt", false); // Copy in case user has deleted their config
+		copy_asset("/sdcard/xash/", "commandline.txt", true); // Always update so -log flag stays current
 
 
 		//Read these from a file and pass through

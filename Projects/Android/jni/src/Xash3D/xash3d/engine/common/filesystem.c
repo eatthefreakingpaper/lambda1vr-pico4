@@ -1851,6 +1851,12 @@ void FS_Init( void )
 	int		i;
 
 	FS_InitMemory();
+#ifdef __ANDROID__
+	{
+		FILE *diag = fopen("/sdcard/xash/l1vr_fs_diag.txt", "w");
+		if( diag ) { fprintf(diag, "FS_Init: entered\n"); fclose(diag); }
+	}
+#endif
 
 	Cmd_AddCommand( "fs_rescan", FS_Rescan_f, "rescan filesystem search paths" );
 	Cmd_AddCommand( "fs_path", FS_Path_f, "show filesystem search paths" );
@@ -1863,6 +1869,12 @@ void FS_Init( void )
 		fs_caseinsensitive = false;
 #endif
 
+#ifdef __ANDROID__
+	{
+		FILE *diag = fopen("/sdcard/xash/l1vr_fs_diag.txt", "a");
+		if( diag ) { fprintf(diag, "FS_Init: rootdir=%s rodir=%s host.type=%d\n", host.rootdir, host.rodir, host.type); fclose(diag); }
+	}
+#endif
 #ifndef _WIN32
 	if( !fs_caseinsensitive )
 	{
@@ -1934,10 +1946,10 @@ void FS_Init( void )
 				FS_LOGI("FS_Init:   dir[%d]=%s", di, dirs.strings[di]);
 #ifdef __ANDROID__
 			{
-				FILE *diag = fopen("/sdcard/xash/l1vr_fs_diag.txt", "w");
+				FILE *diag = fopen("/sdcard/xash/l1vr_fs_diag.txt", "a");
 				if( diag )
 				{
-					fprintf(diag, "cwd=%s\ngs_basedir=%s\nnumdirs=%d\n", cwd, gs_basedir, dirs.numstrings);
+					fprintf(diag, "FS_Init: cwd=%s gs_basedir=%s numdirs=%d\n", cwd, gs_basedir, dirs.numstrings);
 					for( int di = 0; di < dirs.numstrings; di++ )
 						fprintf(diag, "dir[%d]=%s\n", di, dirs.strings[di]);
 					fclose(diag);
@@ -1994,6 +2006,19 @@ void FS_Init( void )
 		}
 
 		stringlistfreecontents( &dirs );
+#ifdef __ANDROID__
+		{
+			int gi;
+			FILE *diag = fopen("/sdcard/xash/l1vr_fs_diag.txt", "a");
+			if( diag )
+			{
+				fprintf(diag, "FS_Init: numgames=%d gs_basedir=%s\n", SI.numgames, gs_basedir);
+				for( gi = 0; gi < SI.numgames; gi++ )
+					fprintf(diag, "game[%d]=%s\n", gi, SI.games[gi] ? SI.games[gi]->gamefolder : "(null)");
+				fclose(diag);
+			}
+		}
+#endif
 	}
 
 	MsgDev( D_NOTE, "FS_Init: done\n" );
