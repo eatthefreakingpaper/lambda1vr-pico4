@@ -2,7 +2,7 @@
 
 # Lambda1VR
 
-Lambda1VR is a port / mod of the Xash3D-FWGS Half-Life Engine for the Oculus Quest adding 6DoF weapon support and OpenGLES2.0 rendering.
+Lambda1VR is a port / mod of the Xash3D-FWGS Half-Life Engine for the Oculus Quest and Pico 4 adding 6DoF weapon support and OpenGLES2.0 rendering.
 
 ```
 Xash3D is a game engine, aimed to provide compatibility with Half-Life Engine, 
@@ -28,14 +28,25 @@ The original half-life can be purchased on Steam:  https://store.steampowered.co
 *PLEASE NOTE:* Half-life: Source is *not* compatible.
 
 
-## Copying the Full Game files to your Oculus Quest
+## Pico 4 — Required: Grant "All Files Access" Permission
+
+If you are installing on a **Pico 4**, you must grant the app storage access before launching for the first time. Without this step the engine cannot write its required files to `/sdcard/xash/` and the game will silently fail to start.
+
+1. Install the APK via ADB or SideQuest.
+2. **Before launching**, open **Settings → Apps → Lambda1VR → Permissions** and enable **"All Files Access"** (also listed as "Manage all files" on some Pico OS versions).
+3. Launch the game normally. The `xash/` folder will be created on first run.
+
+Then follow the game file copy steps below.
+
+
+## Copying the Full Game files to your Oculus Quest / Pico 4
 
 Before attempting to start Lambda1VR you need to do the following:
 
-- Install and start the application once until it shows the menu screen. At this point exit and you will find that a "xash" folder has been created on your headset. 
+- Install and start the application once until it shows the menu screen. At this point exit and you will find that a "xash" folder has been created on your headset.
 - Locate the install of half-life on your PC, if installed from Steam then it will be somewhere like C:/Program Files (x86)/Steam/steamApps/common/HalfLife/
-- Copy the content of the "valve" folder to the newly created "xash/valve" folder on the Quest (This will take a long time)
-- (optional) Copy the contents of the valve_hd folder into the valve folder now on your Quest (this gives you some nicer models). If you are a Mac user please read this post, otherwise you will get a crash: https://www.reddit.com/r/Lambda1VR/comments/cls57m/mac_running_halflife_with_hd_assets_on_quest/
+- Copy the content of the "valve" folder to the newly created "xash/valve" folder on the headset (This will take a long time)
+- (optional) Copy the contents of the valve_hd folder into the valve folder now on your headset (this gives you some nicer models). If you are a Mac user please read this post, otherwise you will get a crash: https://www.reddit.com/r/Lambda1VR/comments/cls57m/mac_running_halflife_with_hd_assets_on_quest/
 
 
 ## Save Games File
@@ -177,6 +188,3 @@ This port was developed using the now deprecated Xash3D port found here: https:/
 
 Lambda1VR is covered by the GPL 3.0 license which is inherited from the Xash3D-FWGS project.
 The HLSDK sub-repository and associated works (which include the original 6DoF weapons code by Max Vollmer) are in a separate repository wholly covered with the Valve Corporation Half Life 1 SDK LICENSE (https://github.com/DrBeef/hlsdk-xash3d).
-#   l a m b d a 1 v r - p i c o 4  
- #   l a m b d a 1 v r - p i c o 4  
- 
