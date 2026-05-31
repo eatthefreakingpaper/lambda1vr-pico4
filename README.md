@@ -1,4 +1,7 @@
-﻿![Lambda1VR Banner](https://www.lambda1vr.com/img/banner2.jpg)
+I'm a noob using github and was trying to make this a fork of https://github.com/Team-Beef-Studios/Lambda1VR
+ALL CREDIT GOES TO THEM (and claude) I DID NOTHING
+ 
+ ![Lambda1VR Banner](https://www.lambda1vr.com/img/banner2.jpg)
 
 # Lambda1VR
 
